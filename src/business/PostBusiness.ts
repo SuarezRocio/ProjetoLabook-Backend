@@ -3,7 +3,7 @@ import { CreatePostInputDTO, CreatePostOutputDTO } from "../dtos/post/createPost
 import { DeletePostInputDTO, DeletePostOutputDTO } from "../dtos/post/deletePost.dto"
 import { EditPostInputDTO, EditPostOutputDTO } from "../dtos/post/editPost.dto"
 import { GetPostOutputDTO, GetPostInputDTO } from "../dtos/post/getPost.dto"
-import { LikeOrDislikeInputDTO, LikeOrDislikeOuputDTO } from "../dtos/post/likeOrDislike.dto"
+import { LikeOrDislikeInputDTO, LikeOrDislikeOuputDTO, LikeOrDislikePostSchema } from "../dtos/post/likeOrDislike.dto"
 import { BadRequestError } from "../errors/BadRequestError"
 import { NotFoundError } from "../errors/NotFoundError"
 import { UnathorizedError } from "../errors/UnauthorizedError"
@@ -52,16 +52,6 @@ export class PostBusiness {
         return postajesDB.toBusinessModel()
       })
 
-      /**
-            private id: string,
-            private creator_id: string,
-            private dislikes: number,
-            private likes: number,
-            private content: string,
-            private createdAt: string,
-            private updateAt: string,
-            private creator_name: string, */
-
     const output: GetPostOutputDTO = postajesDB
 
     return output
@@ -95,13 +85,12 @@ export class PostBusiness {
       throw new ForbiddenError("soamente que crio o post pode editarlo")
     }
 
-    
+  
+     if(payload.id !== PostDB.creator_id){
+       throw new ForbiddenError("soamente que crio o post pode editarlo")
+     }
 
-    /* if(payload.id !== postDadosDB.creator_id){
-       throw new Error ForbidEnError("soamente que crio o post pode editarlo")
-     }*/
-
-    const post = new Post {
+    const post = new Post (
       PostDB.id,
       PostDB.creator_id,
       PostDB.dislikes,
@@ -110,28 +99,7 @@ export class PostBusiness {
       PostDB.created_at,
       PostDB.update_at,
       payload.name
-    }
-
-    
-
-/**  id: string,
-  creator_id : string, 
-  dislikes: number,
-  likes: number,
-  content : string,
-  createdAt: string,
-  update_at : string,*/
-
-    /**
-    id TEXT PRIMARY KEY UNIQUE NOT NULL,
-    creator_id TEXT UNIQUE NOT NULL,
-    dislikes INTEGER DEFAULT (0) NOT NULL, 
-    likes INTEGER DEFAULT (0) NOT NULL, 
-    content TEXT NOT NULL,  
-    createdAt TEXT DEFAULT (DATETIME()) NOT NULL,
-    update_at */
-    post.setName(name)
-
+    )
 
     const updatePostDB = post.toDBModel()
     await this.postDatabase.updatePost(updatePostDB)
@@ -155,17 +123,17 @@ export class PostBusiness {
       throw new BadRequestError("Token inválido.")
     }
 
-    /*if(payload.role !== USER_ROLES.ADMIN){
-    if(payload.id !== PostDTOS.creator_id){
-      throw new Error ForbiddenError("soamente que crio o post pode editarlo")
+   /* if(payload.role !== USER_ROLES.ADMIN){
+    if(payload.id !== PostDB.creator_id){
+      throw new  ForbiddenError("soamente que crio o post pode editarlo")
     }
     }*/
 
     const postDadosDB = await this.postDatabase.findPostById(idToDelete)
 
-    /*if(!payload){
-      throw new Error UnauthorizedError()
-    }*/
+    if(!payload){
+      throw new UnathorizedError()
+    }
 
     if (!postDadosDB) {
       throw new NotFoundError("post com esse id nao existe")
@@ -193,17 +161,17 @@ export class PostBusiness {
 
     const postDadosDB = await this.postDatabase.findPostById(token)
 
-    /*if(!payload){
-      throw new Error UnauthorizedError()
-    }*/
+    if(!payload){
+      throw new UnathorizedError()
+    }
 
     if (!postDadosDB) {
       throw new NotFoundError("post com esse id nao existe")
     }
 
-    /* if(payload.id !== postDadosDB.creator_id){
-       throw new Error ForbidEnError("soamente que crio o post pode editarlo")
-     }*/
+     if(payload.id !== postDadosDB.creator_id){
+       throw new ForbiddenError("soamente que crio o post pode editarlo")
+     }
 
 
     const postDBWhitCreatorName =
@@ -213,7 +181,7 @@ export class PostBusiness {
       throw new NotFoundError("post com essa id nao existe")
     }
 
-    const posts = new Post{
+    const posts = new Post(
       postDBWhitCreatorName.id,
       postDBWhitCreatorName.creator_id,
       postDBWhitCreatorName.dislikes,
@@ -222,38 +190,9 @@ export class PostBusiness {
       postDBWhitCreatorName.created_at,
       postDBWhitCreatorName.update_at,
       postDBWhitCreatorName.creator_name
-    }
-/**
-            private id: string,
-            private creator_id: string,
-            private dislikes: number,
-            private likes: number,
-            private content: string,
-            private createdAt: string,
-            private updateAt: string,
-            private creator_name: string, */
-
-
-    /**
-      /**
-            private id: string,
-            private creator_id: string,
-            private dislikes: number,
-            private likes: number,
-            private content: string,
-            private createdAt: string,
-            private updateAt: string,
-            private creator_name: string, */ 
-/**
-    id TEXT PRIMARY KEY UNIQUE NOT NULL,
-    creator_id TEXT UNIQUE NOT NULL,
-    dislikes INTEGER DEFAULT (0) NOT NULL, 
-    likes INTEGER DEFAULT (0) NOT NULL, 
-    content TEXT NOT NULL,  
-    createdAt TEXT DEFAULT (DATETIME()) NOT NULL,
-    update_at */
+    )
    
-    const likeSQLlite = likes ? 1 : 0
+    const likeSQLlite = LikeOrDislikePostSchema ? 1 : 0
 
 
     const likeOrDislike: LikeDislikeDB = {
@@ -266,7 +205,7 @@ export class PostBusiness {
       await this.postDatabase.findDislikeLike(likeOrDislike)
 
     if (likeDislikesExits === POST_LIKE.ALREDY_LIKED) {
-      if (likes) {
+      if (likeOrDislike) {
         await this.postDatabase.removeLikeDislike(likeOrDislike)
         posts.removeLike()
       } else {
@@ -276,7 +215,7 @@ export class PostBusiness {
 
       }
     } else if (likeDislikesExits === POST_LIKE.ALREDY_DISLIKED) {
-      if (likes === false) {
+      if (!likeOrDislike === false) {
         await this.postDatabase.removeLikeDislike(likeOrDislike)
         posts.removeDisLike()
       } else {
@@ -286,7 +225,7 @@ export class PostBusiness {
       }
     } else {
       await this.postDatabase.insertLikeDislike(likeOrDislike)
-      likes ? posts.addLike() : posts.addDisLike()
+      likeOrDislike ? posts.addLike() : posts.addDisLike()
     }
 
     const updatePostDB = posts.toDBModel()

@@ -189,12 +189,3 @@ export interface PostDBWhitCreatorName {
 }
 
 
-/*
-id TEXT PRIMARY KEY UNIQUE NOT NULL,
-creator_id TEXT UNIQUE NOT NULL,
-dislikes INTEGER DEFAULT (0) NOT NULL, 
-likes INTEGER DEFAULT (0) NOT NULL, 
-content TEXT NOT NULL,  
-createdAt TEXT DEFAULT (DATETIME()) NOT NULL,
-update_at
-*/
