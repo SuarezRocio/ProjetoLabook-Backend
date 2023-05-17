@@ -239,7 +239,7 @@ export class PostBusiness {
     input: CreatePostInputDTO
   ): Promise<CreatePostOutputDTO> => {
     // const { id, name, price } = input
-    const { name, token } = input
+    const { content, token } = input
  
     const payload = this.tokenManager.getPayload(token)
 
@@ -251,7 +251,7 @@ export class PostBusiness {
 
     const post = new Post(
       id,
-      name,
+      content,
       0,
       0,
      new Date().toISOString(),
