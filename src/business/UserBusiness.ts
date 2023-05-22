@@ -21,7 +21,7 @@ export class UserBusiness {
     input: GetUsersInputDTO
   ): Promise<GetUsersOutputDTO> => {
     const { q , token } = input
-/*
+
     const payload = this.tokenManager.getPayload(token)
 
     if(payload === null) {
@@ -30,8 +30,21 @@ export class UserBusiness {
 
     if (payload.role !== USER_ROLES.ADMIN) {
 			throw new BadRequestError("Somente admins podem acessar esse recurso.")
-		}} 
-*/
+		}
+
+   /* const hash = await this.hashManager.hash("martin4564")
+    console.log(hash)
+
+    
+    const hash_1 = await this.hashManager.hash("beltrana00")
+    console.log(hash_1)
+
+    
+    const hash_2 = await this.hashManager.hash("astrodev99")
+    console.log(hash_2)*/
+
+
+
     const usersDB = await this.userDatabase.findUsers(q)
 
     const users = usersDB.map((userDB) => {

@@ -46,12 +46,19 @@ export class PostBusiness {
           PostDBWhitCreatorName.likes,
           PostDBWhitCreatorName.content,
           PostDBWhitCreatorName.created_at,
-          PostDBWhitCreatorName.update_at,
-          PostDBWhitCreatorName.creator_name
+          PostDBWhitCreatorName.update_at
         )
         return postajesDB.toBusinessModel()
       })
-
+/**
+            private id: string,
+            private creator_id: string,
+            private dislikes: number,
+            private likes: number,
+            private content: string,
+            private createdAt: string,
+            private updateAt: string,
+            private creator_name: string, */
     const output: GetPostOutputDTO = postajesDB
 
     return output
@@ -97,8 +104,7 @@ export class PostBusiness {
       PostDB.likes,
       PostDB.content,
       PostDB.created_at,
-      PostDB.update_at,
-      payload.name
+      PostDB.update_at
     )
 
     const updatePostDB = post.toDBModel()
@@ -161,7 +167,7 @@ export class PostBusiness {
 
     const postDadosDB = await this.postDatabase.findPostById(token)
 
-    if(!payload){
+    if (!payload) {
       throw new UnathorizedError()
     }
 
@@ -169,13 +175,12 @@ export class PostBusiness {
       throw new NotFoundError("post com esse id nao existe")
     }
 
-     if(payload.id !== postDadosDB.creator_id){
-       throw new ForbiddenError("soamente que crio o post pode editarlo")
-     }
+    if (payload.id !== postDadosDB.creator_id) {
+      throw new ForbiddenError("soamente que crio o post pode editarlo")
+    }
 
 
-    const postDBWhitCreatorName =
-      await this.postDatabase.findPostDBWhitCreatorNameById(postId)
+    const postDBWhitCreatorName = await this.postDatabase.findPostDBWhitCreatorNameById(postId)
 
     if (!postDBWhitCreatorName) {
       throw new NotFoundError("post com essa id nao existe")
@@ -188,10 +193,12 @@ export class PostBusiness {
       postDBWhitCreatorName.likes,
       postDBWhitCreatorName.content,
       postDBWhitCreatorName.created_at,
-      postDBWhitCreatorName.update_at,
-      postDBWhitCreatorName.creator_name
+      postDBWhitCreatorName.update_at
     )
-   
+
+
+    //const likes = ? 0 : 1
+
     const likeSQLlite = LikeOrDislikePostSchema ? 1 : 0
 
 
@@ -201,8 +208,7 @@ export class PostBusiness {
       like: likeSQLlite
     }
 
-    const likeDislikesExits =
-      await this.postDatabase.findDislikeLike(likeOrDislike)
+    const likeDislikesExits = await this.postDatabase.findDislikeLike(likeOrDislike)
 
     if (likeDislikesExits === POST_LIKE.ALREDY_LIKED) {
       if (likeOrDislike) {
@@ -251,18 +257,20 @@ export class PostBusiness {
 
     const post = new Post(
       id,
+      payload.id,
+      0,
+      0,
       content,
-      0,
-      0,
      new Date().toISOString(),
-     new Date().toISOString(),
-     payload.id,
-     payload.name
-    )
+     new Date().toISOString()
+     )
 
 
-    const PostsDB = post.toDBModel()
-    await this.postDatabase.insertPost(PostsDB)
+    const postsDB = post.toDBModel()
+
+    console.log(postsDB)   
+    await this.postDatabase.insertPost(postsDB)
+
 
     const output : CreatePostOutputDTO = undefined
     return output

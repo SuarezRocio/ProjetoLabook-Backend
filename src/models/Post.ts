@@ -17,8 +17,7 @@ export interface PostModel {
   created_at: string,
   update_at : string,
   creator: {
-    id: string,
-    name: string
+    id: string
   }
 }
 
@@ -35,8 +34,7 @@ export interface PostDBWhitCreatorName {
     likes: number,
     content : string,
     created_at: string,
-    update_at : string,
-    creator_name: string
+    update_at : string
   }
   
 
@@ -47,8 +45,7 @@ export interface PostDBWhitCreatorName {
     likes: number,
     content : string,
     created_at: string,
-    update_at : string,
-    creator_name: string
+    update_at : string
   }
   
 
@@ -70,9 +67,7 @@ export interface PostDBWhitCreatorName {
             private likes: number,
             private content: string,
             private createdAt: string,
-            private updateAt: string,
-            private creator_name: string,
-            
+            private updateAt: string
             ) {}
     
         public getId(): string {
@@ -133,13 +128,13 @@ export interface PostDBWhitCreatorName {
         }
     
         
-        public getCreator_name(): string {
+       /* public getCreator_name(): string {
             return this.creator_name
         }
     
         public setCreator_name(value: string): void {
             this.creator_name = value
-        }
+        }*/
     
         public addLike = (): void => {
             this.likes++
@@ -165,11 +160,20 @@ export interface PostDBWhitCreatorName {
             creator_id : this.creator_id, 
             dislikes: this.dislikes,
             likes: this.likes,
-            created_at: this.createdAt,       
             content :  this.content,
+            created_at: this.createdAt,       
             update_at : this.updateAt,
             }
     }
+
+/**  id TEXT PRIMARY KEY UNIQUE NOT NULL,
+    creator_id TEXT UNIQUE NOT NULL,
+    dislikes INTEGER DEFAULT (0) NOT NULL, 
+    likes INTEGER DEFAULT (0) NOT NULL, 
+    content TEXT NOT NULL,  
+    created_at TEXT DEFAULT (DATETIME()) NOT NULL,
+    update_at TEXT DEFAULT (DATETIME()) NOT NULL, */
+
 
     // para facilitar nossa vida, temos o método que gera um ProductModel
     public toBusinessModel(): PostModel {
@@ -181,8 +185,7 @@ export interface PostDBWhitCreatorName {
             created_at: this.createdAt,
             update_at : this.updateAt,
             creator: {
-                id: this.creator_id,
-                name: this.creator_name
+                id: this.creator_id
             }       
             }
     }

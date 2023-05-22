@@ -10,9 +10,9 @@ CREATE TABLE users (
 
 INSERT INTO users (id, name, email, password, role)
 VALUES
-	('u001', 'Martin', 'martin@email.com', 'martin4564' ,'NORMAL'),
-	('u002', 'Ana', 'ana@email.com', 'beltrana00', 'NORMAL'),
-	('u003', 'Lucrecia', 'lucrecia@email.com', 'astrodev99', 'ADMIN');
+	('u001', 'Martin', 'martin@email.com', '$2a$12$8/RfJNMCPKiYEcii0gl9YOW63o67FmB93raqtjbgOyi1nYzQFCzXq' ,'NORMAL'),
+	('u002', 'Ana', 'ana@email.com', '$2a$12$wXQZt0eeer9QyFBoXQVzluw5i4dCQF9YPygUnTNIa.cP137XTNYs.', 'NORMAL'),
+	('u003', 'Lucrecia', 'lucrecia@email.com', '$2a$12$njT4g/iSh9e/uKED35a2HOp5r4TZUDxYzd9sKZk6hQ9US.V5Cfg36', 'ADMIN');
 
 DROP TABLE users;    
 
@@ -29,7 +29,14 @@ CREATE TABLE post (
     FOREIGN KEY (creator_id) REFERENCES users(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE
-   );
+    );
+
+/*   creator_name TEXT NOT NULL,
+    FOREIGN KEY (creator_name) REFERENCES users(name)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+*/
+
 
 /* ON UPDATE CASCADE
     ON DELETE CASCADE
@@ -40,7 +47,7 @@ CREATE TABLE post (
 
 SELECT * FROM post;
 
-INSERT INTO post (id, creator_id, content)
+INSERT INTO post (id, creator_id, content )
 VALUES
 	('p001', 'u001','kkkkkk' ),
 	('p002','u002' ,'maravilhoso :)' ),
