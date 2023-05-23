@@ -8,7 +8,7 @@ export class PostDatabase extends BaseDatabase {
     public static TABLE_LIKES_DISLIKES = "likes_dislikes"
 
     public findPost = async (id: string): Promise<PostDB | undefined> => {
-        const [result] = await PostDatabase
+        const [result] = await BaseDatabase
             .connection(PostDatabase.TABLE_POST)
             .select()
             .where({ id })
@@ -56,8 +56,9 @@ export class PostDatabase extends BaseDatabase {
     ): Promise<void> => {
         await BaseDatabase
             .connection(PostDatabase.TABLE_POST)
-            .insert(postDB)
+            .update(postDB)
             .where({ id: postDB.id })
+            console.log(postDB)
     }
 
 
@@ -134,7 +135,7 @@ export class PostDatabase extends BaseDatabase {
 
     public findPostDBWhitCreatorNameById =
         async (id: string): Promise<PostDBWhitCreatorName | undefined> => {
-            const [result] = await PostDatabase
+            const [result] = await BaseDatabase
                 .connection(PostDatabase.TABLE_POST)
                 .select(`${UserDatabase.TABLE_USERS}`,
                     `${PostDatabase.TABLE_POST}.id`,
@@ -170,7 +171,7 @@ export class PostDatabase extends BaseDatabase {
     public findDislikeLike = async (
         likeDislikesDB: LikeDislikeDB
     ): Promise<POST_LIKE | undefined> => {
-        const [result]: Array<POST_LIKE | undefined> = await PostDatabase
+        const [result]: Array<POST_LIKE | undefined> = await BaseDatabase
             .connection(PostDatabase.TABLE_LIKES_DISLIKES)
             .select()
             .where({

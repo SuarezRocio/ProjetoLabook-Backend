@@ -1,4 +1,4 @@
--- Active: 1683911636274@@127.0.0.1@3306
+-- Active: 1684869414787@@127.0.0.1@3306
 CREATE TABLE users (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
     name TEXT NOT NULL,
@@ -20,7 +20,7 @@ SELECT * FROM users;
 
 CREATE TABLE post (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
-    creator_id TEXT UNIQUE NOT NULL,
+    creator_id TEXT NOT NULL,
     dislikes INTEGER DEFAULT (0) NOT NULL, 
     likes INTEGER DEFAULT (0) NOT NULL, 
     content TEXT NOT NULL,  

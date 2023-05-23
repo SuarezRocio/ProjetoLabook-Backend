@@ -94,7 +94,7 @@ export class PostController {
     try {
 
       const input = DeletePostSchema.parse({
-        idToDelete: req.body.id,
+        idToDelete: req.params.id,
         content: req.body.content,
         token: req.headers.authorization
       })
@@ -120,8 +120,8 @@ export class PostController {
     try {
 
       const input = LikeOrDislikePostSchema.parse({
-        postId: req.body.id,
-        like: req.body.like,
+        postId: req.params.id,
+        likes: req.body.likes,
         token: req.headers.authorization
       })
 

@@ -68,12 +68,16 @@ export class PostBusiness {
   public editPost = async (
     input: EditPostInputDTO
   ): Promise<EditPostOutputDTO> => {
-    const {idToEdit,  token } = input
+    const {idToEdit,  token, content } = input
 
 
     
     const payload = this.tokenManager.getPayload(token)
     
+    if(!content){
+      throw new BadRequestError()
+    }
+
     if(!payload){
       throw new UnathorizedError()
     }
@@ -102,13 +106,17 @@ export class PostBusiness {
       PostDB.creator_id,
       PostDB.dislikes,
       PostDB.likes,
-      PostDB.content,
+      content,
       PostDB.created_at,
       PostDB.update_at
     )
 
+
+     //post.setContent = (content) 
+
     const updatePostDB = post.toDBModel()
     await this.postDatabase.updatePost(updatePostDB)
+   // console.log(updatePostDB)
 
 
     const output: EditPostOutputDTO = undefined
@@ -129,8 +137,8 @@ export class PostBusiness {
       throw new BadRequestError("Token inválido.")
     }
 
-   /* if(payload.role !== USER_ROLES.ADMIN){
-    if(payload.id !== PostDB.creator_id){
+    /*if(payload.role !== USER_ROLES.ADMIN){
+    if(payload.id !== Post.creator_id){
       throw new  ForbiddenError("soamente que crio o post pode editarlo")
     }
     }*/
@@ -152,6 +160,44 @@ export class PostBusiness {
 
     return output
   }
+
+  public createPost = async (
+    input: CreatePostInputDTO
+  ): Promise<CreatePostOutputDTO> => {
+    // const { id, name, price } = input
+    const { content, token } = input
+ 
+    const payload = this.tokenManager.getPayload(token)
+
+    if(!payload){
+      throw new UnathorizedError()
+    }
+
+    const id = this.idGenerator.generate()
+
+    const post = new Post(
+      id,
+      payload.id,
+      0,
+      0,
+      content,
+     new Date().toISOString(),
+     new Date().toISOString()
+     )
+
+
+    const postsDB = post.toDBModel()
+
+    console.log(postsDB)   
+    await this.postDatabase.insertPost(postsDB)
+
+
+    const output : CreatePostOutputDTO = undefined
+    return output
+    
+
+}
+
 
 
   public likeOrDislikePost = async (
@@ -197,21 +243,20 @@ export class PostBusiness {
     )
 
 
-    //const likes = ? 0 : 1
-
-    const likeSQLlite = LikeOrDislikePostSchema ? 1 : 0
-
+    const likes = true;
+    const likeSQLlite = likes ? 1 : 0;
 
     const likeOrDislike: LikeDislikeDB = {
-      user_id: payload.id,
-      post_id: postId,
-      like: likeSQLlite
+    user_id: payload.id,
+    post_id: postId,
+    likes: likeSQLlite
     }
-
-    const likeDislikesExits = await this.postDatabase.findDislikeLike(likeOrDislike)
+    
+    const likeDislikesExits =
+      await this.postDatabase.findDislikeLike(likeOrDislike)
 
     if (likeDislikesExits === POST_LIKE.ALREDY_LIKED) {
-      if (likeOrDislike) {
+      if (likes) {
         await this.postDatabase.removeLikeDislike(likeOrDislike)
         posts.removeLike()
       } else {
@@ -221,7 +266,7 @@ export class PostBusiness {
 
       }
     } else if (likeDislikesExits === POST_LIKE.ALREDY_DISLIKED) {
-      if (!likeOrDislike === false) {
+      if (!likes === false) {
         await this.postDatabase.removeLikeDislike(likeOrDislike)
         posts.removeDisLike()
       } else {
@@ -231,7 +276,7 @@ export class PostBusiness {
       }
     } else {
       await this.postDatabase.insertLikeDislike(likeOrDislike)
-      likeOrDislike ? posts.addLike() : posts.addDisLike()
+      likes ? posts.addLike() : posts.addDisLike()
     }
 
     const updatePostDB = posts.toDBModel()
@@ -240,41 +285,6 @@ export class PostBusiness {
     const output: LikeOrDislikeOuputDTO = undefined
     return output
   }
-
-  public createPost = async (
-    input: CreatePostInputDTO
-  ): Promise<CreatePostOutputDTO> => {
-    // const { id, name, price } = input
-    const { content, token } = input
- 
-    const payload = this.tokenManager.getPayload(token)
-
-    if(!payload){
-      throw new UnathorizedError()
-    }
-
-    const id = this.idGenerator.generate()
-
-    const post = new Post(
-      id,
-      payload.id,
-      0,
-      0,
-      content,
-     new Date().toISOString(),
-     new Date().toISOString()
-     )
+  }
 
 
-    const postsDB = post.toDBModel()
-
-    console.log(postsDB)   
-    await this.postDatabase.insertPost(postsDB)
-
-
-    const output : CreatePostOutputDTO = undefined
-    return output
-    
-
-}
-}
