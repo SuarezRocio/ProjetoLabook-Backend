@@ -85,7 +85,7 @@ Para entender a tabela likes_dislikes
 
     caso dê dislike em um post que já tenha dado dislike, o dislike é removido (deleta o item da tabela)
     
-    ______________________________________________________________________________________________________
+    _______________________________________________________________________________________________________
 Me gusta o no me gusta la publicación (el mismo punto final hace ambas cosas)
 
 Punto final protegido, requiere un token jwt para acceder a él.
