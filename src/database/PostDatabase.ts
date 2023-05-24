@@ -137,7 +137,7 @@ export class PostDatabase extends BaseDatabase {
         async (id: string): Promise<PostDBWhitCreatorName | undefined> => {
             const [result] = await BaseDatabase
                 .connection(PostDatabase.TABLE_POST)
-                .select(`${UserDatabase.TABLE_USERS}`,
+                .select(
                     `${PostDatabase.TABLE_POST}.id`,
                     `${PostDatabase.TABLE_POST}.creator_id`,
                     `${PostDatabase.TABLE_POST}.dislikes`,

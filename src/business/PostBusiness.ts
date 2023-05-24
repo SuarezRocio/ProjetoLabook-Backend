@@ -203,7 +203,7 @@ export class PostBusiness {
   public likeOrDislikePost = async (
     input: LikeOrDislikeInputDTO
   ): Promise<LikeOrDislikeOuputDTO> => {
-    const { token, postId } = input
+    const { token, postId, likes } = input
 
     const payload = this.tokenManager.getPayload(token)
 
@@ -211,7 +211,7 @@ export class PostBusiness {
       throw new BadRequestError("Token inválido.")
     }
 
-    const postDadosDB = await this.postDatabase.findPostById(token)
+    const postDadosDB = await this.postDatabase.findPostById(postId)
 
     if (!payload) {
       throw new UnathorizedError()
@@ -243,7 +243,7 @@ export class PostBusiness {
     )
 
 
-    const likes = true;
+   // const likes = true;
     const likeSQLlite = likes ? 1 : 0;
 
     const likeOrDislike: LikeDislikeDB = {
