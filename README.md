@@ -1,6 +1,6 @@
 # projetoLabook-backend
 
-execute o código com npm run start
+execute o código com npm run dev
 
 # projeto-labook-backend
 
