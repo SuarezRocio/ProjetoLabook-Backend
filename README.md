@@ -28,7 +28,7 @@ Conteúdos abordados
 Banco de dados
 https://dbdiagram.io/d/63d16443296d97641d7c1ae1
 
-
+projeto labebook finalizado na data: 06/07/2023, alteração do link do carteiro da documentação, link a seguir =>
 *Documentacion
 https://documenter.getpostman.com/view/25860614/2s93saZXvi
 
