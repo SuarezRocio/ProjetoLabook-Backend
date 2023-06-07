@@ -30,7 +30,7 @@ https://dbdiagram.io/d/63d16443296d97641d7c1ae1
 
 
 *Documentacion
-https://documenter.getpostman.com/view/25860614/2s93m6128n
+https://documenter.getpostman.com/view/25860614/2s93saZXvi
 
 
 
