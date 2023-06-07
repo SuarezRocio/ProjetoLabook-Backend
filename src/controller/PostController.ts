@@ -16,8 +16,8 @@ export class PostController {
   public getPost = async (req: Request, res: Response) => {
     try {
       const input = GetPostSchema.parse({
-     //  name: req.body.name,
-       token: req.headers.authorization
+        //  name: req.body.name,
+        token: req.headers.authorization
         // q: req.query.q
       })
 
@@ -115,7 +115,7 @@ export class PostController {
     }
   }
 
-  
+
   public likeOrDislikePost = async (req: Request, res: Response) => {
     try {
 

@@ -33,7 +33,6 @@ export class UserController {
       }
     }
   }
-
   public signup = async (req: Request, res: Response) => {
     try {
       const input = SignupSchema.parse({

@@ -10,7 +10,7 @@ import { UnathorizedError } from "../errors/UnauthorizedError"
 import { LikeDislikeDB, POST_LIKE } from "../models/Post"
 import { IdGenerator } from "../services/IdGenerator"
 import { TokenManager } from "../services/TokenManager"
-import {Post, PostDB} from "../models/Post"
+import { Post, PostDB } from "../models/Post"
 import { ForbiddenError } from "../errors/ForbiddenError"
 import { USER_ROLES } from "../models/User"
 
@@ -39,7 +39,7 @@ export class PostBusiness {
     //poder generar postModel
     const postajesDB = postDBWhitCreatorName
       .map((PostDBWhitCreatorName) => {
-        const postajesDB = new Post (
+        const postajesDB = new Post(
           PostDBWhitCreatorName.id,
           PostDBWhitCreatorName.creator_id,
           PostDBWhitCreatorName.dislikes,
@@ -50,15 +50,15 @@ export class PostBusiness {
         )
         return postajesDB.toBusinessModel()
       })
-/**
-            private id: string,
-            private creator_id: string,
-            private dislikes: number,
-            private likes: number,
-            private content: string,
-            private createdAt: string,
-            private updateAt: string,
-            private creator_name: string, */
+    /**
+                private id: string,
+                private creator_id: string,
+                private dislikes: number,
+                private likes: number,
+                private content: string,
+                private createdAt: string,
+                private updateAt: string,
+                private creator_name: string, */
     const output: GetPostOutputDTO = postajesDB
 
     return output
@@ -68,17 +68,17 @@ export class PostBusiness {
   public editPost = async (
     input: EditPostInputDTO
   ): Promise<EditPostOutputDTO> => {
-    const {idToEdit,  token, content } = input
+    const { idToEdit, token, content } = input
 
 
-    
+
     const payload = this.tokenManager.getPayload(token)
-    
-    if(!content){
+
+    if (!content) {
       throw new BadRequestError()
     }
 
-    if(!payload){
+    if (!payload) {
       throw new UnathorizedError()
     }
 
@@ -92,16 +92,16 @@ export class PostBusiness {
       throw new NotFoundError("post com esse id nao existe")
     }
 
-    if(payload.id !== PostDB.creator_id){
+    if (payload.id !== PostDB.creator_id) {
       throw new ForbiddenError("soamente que crio o post pode editarlo")
     }
 
-  
-     if(payload.id !== PostDB.creator_id){
-       throw new ForbiddenError("soamente que crio o post pode editarlo")
-     }
 
-    const post = new Post (
+    if (payload.id !== PostDB.creator_id) {
+      throw new ForbiddenError("soamente que crio o post pode editarlo")
+    }
+
+    const post = new Post(
       PostDB.id,
       PostDB.creator_id,
       PostDB.dislikes,
@@ -112,11 +112,11 @@ export class PostBusiness {
     )
 
 
-     //post.setContent = (content) 
+    //post.setContent = (content) 
 
     const updatePostDB = post.toDBModel()
     await this.postDatabase.updatePost(updatePostDB)
-   // console.log(updatePostDB)
+    // console.log(updatePostDB)
 
 
     const output: EditPostOutputDTO = undefined
@@ -145,7 +145,7 @@ export class PostBusiness {
 
     const postDadosDB = await this.postDatabase.findPostById(idToDelete)
 
-    if(!payload){
+    if (!payload) {
       throw new UnathorizedError()
     }
 
@@ -166,10 +166,10 @@ export class PostBusiness {
   ): Promise<CreatePostOutputDTO> => {
     // const { id, name, price } = input
     const { content, token } = input
- 
+
     const payload = this.tokenManager.getPayload(token)
 
-    if(!payload){
+    if (!payload) {
       throw new UnathorizedError()
     }
 
@@ -181,22 +181,22 @@ export class PostBusiness {
       0,
       0,
       content,
-     new Date().toISOString(),
-     new Date().toISOString()
-     )
+      new Date().toISOString(),
+      new Date().toISOString()
+    )
 
 
     const postsDB = post.toDBModel()
 
-    console.log(postsDB)   
+    console.log(postsDB)
     await this.postDatabase.insertPost(postsDB)
 
 
-    const output : CreatePostOutputDTO = undefined
+    const output: CreatePostOutputDTO = undefined
     return output
-    
 
-}
+
+  }
 
 
 
@@ -243,15 +243,15 @@ export class PostBusiness {
     )
 
 
-   // const likes = true;
+    // const likes = true;
     const likeSQLlite = likes ? 1 : 0;
 
     const likeOrDislike: LikeDislikeDB = {
-    user_id: payload.id,
-    post_id: postId,
-    likes: likeSQLlite
+      user_id: payload.id,
+      post_id: postId,
+      likes: likeSQLlite
     }
-    
+
     const likeDislikesExits =
       await this.postDatabase.findDislikeLike(likeOrDislike)
 
@@ -285,6 +285,5 @@ export class PostBusiness {
     const output: LikeOrDislikeOuputDTO = undefined
     return output
   }
-  }
-
+}
 
